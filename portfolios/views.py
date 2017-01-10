@@ -1,9 +1,15 @@
-from django.shortcuts import render
+# coding: utf-8
+
+from .serializer import DadosPessoaisSerializer
 from .models import DadosPessoais
 
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-def portfolio_exibir(request):
-    pessoa = DadosPessoais.objects.all()
-    context = {'pessoa': pessoa}
 
-    return render(request, 'portfolios/portfolio_exibir.html', context)
+class CategoryViewSet(APIView):
+    serializer_class = DadosPessoaisSerializer
+
+    def get(self, request, format=None):
+        serializer = self.serializer_class(DadosPessoais.objects.all(), many=True)
+        return Response(serializer.data)
