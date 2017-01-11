@@ -10,6 +10,7 @@ from rest_framework import status
 
 from django.shortcuts import render
 
+# Codigo do projeto antigo
 
 def portfolio_exibir(request):
     pessoa = DadosPessoais.objects.all()
