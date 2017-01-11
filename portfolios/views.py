@@ -12,6 +12,7 @@ from django.shortcuts import render
 
 # Codigo do projeto antigo
 
+
 def portfolio_exibir(request):
     pessoa = DadosPessoais.objects.all()
     context = {'pessoa': pessoa}
@@ -29,9 +30,19 @@ class PortfolioViewSet(APIView):
         return Response(serializer.data)
 '''
 
+
 '''
--- Segundo Código --
-class PortfolioViewSet(APIView):
+ -- Segundo Código --
+
+class PortfolioListView(APIView):
+    serializer_class = DadosPessoaisSerializer
+
+    def get(self, request, format=None):
+        serializer = self.serializer_class(DadosPessoais.objects.all(), many=True)
+        return Response(serializer.data)
+
+
+class PortfolioView(APIView):
 
     def get(self, request, pk, format=None):
         if not DadosPessoais.objects.filter(pk=pk).exists():
@@ -43,24 +54,10 @@ class PortfolioViewSet(APIView):
         return Response(serializer.data)
 
 
-class PortfolioListViewSet(APIView):
-    serializer_class = DadosPessoaisSerializer
-
-    def get(self, request, format=None):
-        _category = self.request.query_params.get('category', None)
-
-        if _category:
-            queryset = DadosPessoais.objects.filter(category__id=_category)
-        else:
-            queryset = DadosPessoais.objects.all()
-
-        serializer = self.serializer_class(queryset, many=True)
-
-        return Response(serializer.data)
 '''
 
 
-class PortfolioViewSet(APIView):
+class PortfolioListView(APIView):
     serializer_class = DadosPessoaisSerializer
 
     def get(self, request, format=None):
@@ -76,18 +73,9 @@ class PortfolioViewSet(APIView):
             return Response({"message": "403 Forbidden"}, status=status.HTTP_409_CONFLICT)
 
 
-class PortfolioUpdateView(APIView):
+class PortfolioView(APIView):
 
     def get(self, request, pk, format=None):
         user = DadosPessoais.objects.get(pk=pk)
         serializer = DadosPessoaisSerializer(user)
         return Response(serializer.data)
-
-    def post(self, request, pk=None):
-        user = DadosPessoais.objects.get(pk=pk)
-        serializer = DadosPessoaisSerializer(data=request.data, instance=user)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
