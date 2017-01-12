@@ -22,7 +22,7 @@ def portfolio_exibir(request):
 
 '''
 -- Primeiro Código --
-class PortfolioViewSet(APIView):
+class PortfolioListView(APIView):
     serializer_class = DadosPessoaisSerializer
 
     def get(self, request, format=None):
@@ -45,12 +45,8 @@ class PortfolioListView(APIView):
 class PortfolioView(APIView):
 
     def get(self, request, pk, format=None):
-        if not DadosPessoais.objects.filter(pk=pk).exists():
-            dados_pessoais = DadosPessoaisSerializer([])
-        else:
-            dados_pessoais = DadosPessoais.objects.get(pk=pk)
-            serializer = DadosPessoaisSerializer(dados_pessoais)
-
+        user = DadosPessoais.objects.get(pk=pk)
+        serializer = DadosPessoaisSerializer(user)
         return Response(serializer.data)
 
 
