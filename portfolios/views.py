@@ -66,7 +66,7 @@ class PortfolioListView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response({"message": "403 Forbidden"}, status=status.HTTP_409_CONFLICT)
+            return Response({"message": "Error"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
 class PortfolioView(APIView):
